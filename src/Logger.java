@@ -10,17 +10,24 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class Logger {
-    private static volatile Logger instance;
+    private static Logger instance;
     private static final Object lock = new Object();
-    private boolean consoleOutputEnabled;
-    private boolean fileOutputEnabled;
-    private String logFilePath;
+
+    boolean consoleOutputEnabled;
+    boolean fileOutputEnabled;
+    String logFilePath;
+    private PrintWriter fileWriter;
 
     private Logger() {
         // Default settings
         consoleOutputEnabled = true;
         fileOutputEnabled = true;
         logFilePath = "default.log";
+        try {
+            fileWriter = new PrintWriter(new FileWriter(logFilePath, true));
+        } catch (IOException e) {
+            e.printStackTrace(); // Handle file initialization error
+        }
     }
 
     public static Logger getInstance() {
@@ -44,6 +51,11 @@ public class Logger {
 
     public void setLogFilePath(String filePath) {
         logFilePath = filePath;
+        try {
+            fileWriter = new PrintWriter(new FileWriter(logFilePath, true));
+        } catch (IOException e) {
+            e.printStackTrace(); // Handle file initialization error
+        }
     }
 
     public void log(String message) {
@@ -51,11 +63,14 @@ public class Logger {
             System.out.println(message);
         }
         if (fileOutputEnabled) {
-            try (PrintWriter writer = new PrintWriter(new FileWriter(logFilePath, true))) {
-                writer.println(message);
-            } catch (IOException e) {
-                e.printStackTrace(); // Handle file writing error
-            }
+            fileWriter.println(message);
+            fileWriter.flush(); // Flush the buffer to ensure the message is written immediately
+        }
+    }
+
+    public void close() {
+        if (fileWriter != null) {
+            fileWriter.close();
         }
     }
 }

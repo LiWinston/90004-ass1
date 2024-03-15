@@ -4,6 +4,8 @@ public class Foyer {
 
     public void departFromED() {
         if(DepartingPatient != null) {
+
+
             DepartingPatient = null;
         }
     }
