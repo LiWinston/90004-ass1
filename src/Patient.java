@@ -10,13 +10,13 @@ import java.util.Random;
 
 public class Patient {
     // a unique identifier for this patient
-    private int id;
+    private final int id;
     
     // a flag indicating whether a patient is allocated to a nurse
     protected volatile boolean allocated; 
     
     // a flag indicating whether a patient's condition is severe
-    private boolean severe;
+    private final boolean severe;
 
     // a flag indicating whether a patient has been treated
     protected volatile boolean treated;
@@ -28,11 +28,7 @@ public class Patient {
     private Patient(int id) {
         this.id = id;
         Random random = new Random();
-        if (random.nextDouble() <= Params.SEVERE_PROPORTION) {
-        	this.severe = true;
-        } else {
-        	this.severe = false;
-        }
+        this.severe = random.nextDouble() <= Params.SEVERE_PROPORTION;
         this.allocated = false;
         this.treated = false;
     }
