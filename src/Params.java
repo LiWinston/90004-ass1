@@ -9,6 +9,7 @@ import java.util.Random;
  */
 
 public class Params {
+  public final static String LOG_FILE = "log.txt";
 
   //the number of nurses in the emergency department
   public final static int NURSES = 3;

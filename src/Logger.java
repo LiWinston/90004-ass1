@@ -22,7 +22,7 @@ public class Logger {
         // Default settings
         consoleOutputEnabled = true;
         fileOutputEnabled = true;
-        logFilePath = "default.log";
+        logFilePath = Params.LOG_FILE;
         try {
             fileWriter = new PrintWriter(new FileWriter(logFilePath, true));
         } catch (IOException e) {
@@ -50,6 +50,9 @@ public class Logger {
     }
 
     public void setLogFilePath(String filePath) {
+        if (fileWriter != null) {
+            fileWriter.close(); // Close the old log file writer
+        }
         logFilePath = filePath;
         try {
             fileWriter = new PrintWriter(new FileWriter(logFilePath, true));
@@ -57,6 +60,7 @@ public class Logger {
             e.printStackTrace(); // Handle file initialization error
         }
     }
+
 
     public void log(String message) {
         if (consoleOutputEnabled) {

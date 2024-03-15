@@ -22,6 +22,9 @@ public class Main {
      * 7. The Specialist leaves the Treatment location in between treating each Patient.
      */
     public static void main(String[] args) throws InterruptedException {
+        // set up the log
+        Logger.getInstance().setConsoleOutputEnabled(true);
+        Logger.getInstance().setFileOutputEnabled(true);
 
         // generate the system components
         Foyer foyer = new Foyer();
