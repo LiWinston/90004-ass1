@@ -8,6 +8,11 @@ specified log file.
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Enumeration;
 
 public class Logger {
     private static Logger instance;
@@ -35,6 +40,11 @@ public class Logger {
             synchronized (lock) {
                 if (instance == null) {
                     instance = new Logger();
+                    try {
+                        instance.writeHeader();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -76,5 +86,48 @@ public class Logger {
         if (fileWriter != null) {
             fileWriter.close();
         }
+    }
+
+    private void writeHeader() {
+        StringBuilder header = new StringBuilder();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // Format for date and time
+        header.append("Simulation Start Time: ").append(dateFormat.format(new Date())).append("\n");
+
+        // Start a new thread to get network interface information
+        Thread networkThread = new Thread(() -> {
+            try {
+                InetAddress localhost = InetAddress.getLocalHost();
+                header.append("Computer Name: ").append(localhost.getHostName()).append("\n");
+                header.append("IP Address: ").append(localhost.getHostAddress()).append("\n");
+                Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+                while (networkInterfaces.hasMoreElements()) {
+                    NetworkInterface networkInterface = networkInterfaces.nextElement();
+                    byte[] mac = networkInterface.getHardwareAddress();
+                    if (mac != null) {
+                        StringBuilder macAddress = new StringBuilder();
+                        for (int i = 0; i < mac.length; i++) {
+                            macAddress.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
+                        }
+                        header.append("MAC Address: ").append(macAddress.toString()).append("\n");
+                        break; // Only get the MAC address of the first interface
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        networkThread.start(); // Start the network thread
+        try {
+            networkThread.join(); // Wait for the network thread to finish
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        header.append("Operating System: ").append(System.getProperty("os.name")).append(" ").append(System.getProperty("os.version")).append("\n");
+        header.append("Java Version: ").append(System.getProperty("java.version")).append("\n");
+
+        fileWriter.println(header.toString());
+        fileWriter.flush(); // Flush the buffer to ensure the header is written immediately
     }
 }
