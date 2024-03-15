@@ -1,10 +1,3 @@
-/*
-Summary: This Logger class provides a singleton logger instance that can log messages to both the console and a
-specified log file.
-@author: Yongchun Li
-@date: 15 Mar 2024
-*/
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -33,6 +26,7 @@ public class Logger {
         } catch (IOException e) {
             e.printStackTrace(); // Handle file initialization error
         }
+        writeHeader(); // Write header when initializing
     }
 
     public static Logger getInstance() {
@@ -40,11 +34,6 @@ public class Logger {
             synchronized (lock) {
                 if (instance == null) {
                     instance = new Logger();
-                    try {
-                        instance.writeHeader();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                 }
             }
         }
@@ -77,6 +66,7 @@ public class Logger {
             System.out.println(message);
         }
         if (fileOutputEnabled) {
+            writeHeader(); // Write the header before each log message
             fileWriter.println(message);
             fileWriter.flush(); // Flush the buffer to ensure the message is written immediately
         }
@@ -91,14 +81,15 @@ public class Logger {
     private void writeHeader() {
         StringBuilder header = new StringBuilder();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // Format for date and time
-        header.append("Simulation Start Time: ").append(dateFormat.format(new Date())).append("\n");
+        header.append("════════════════════════════════════════════════════════════════════════════════════\n");
+        header.append("Simu Start Time:   ").append(dateFormat.format(new Date())).append("\n");
 
         // Start a new thread to get network interface information
         Thread networkThread = new Thread(() -> {
             try {
                 InetAddress localhost = InetAddress.getLocalHost();
-                header.append("Computer Name: ").append(localhost.getHostName()).append("\n");
-                header.append("IP Address: ").append(localhost.getHostAddress()).append("\n");
+                header.append("Computer Name:     ").append(localhost.getHostName()).append("\n");
+                header.append("IP Address:        ").append(localhost.getHostAddress()).append("\n");
                 Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
                 while (networkInterfaces.hasMoreElements()) {
                     NetworkInterface networkInterface = networkInterfaces.nextElement();
@@ -108,7 +99,7 @@ public class Logger {
                         for (int i = 0; i < mac.length; i++) {
                             macAddress.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
                         }
-                        header.append("MAC Address: ").append(macAddress.toString()).append("\n");
+                        header.append("MAC Address:       ").append(macAddress.toString()).append("\n");
                         break; // Only get the MAC address of the first interface
                     }
                 }
@@ -124,10 +115,15 @@ public class Logger {
             e.printStackTrace();
         }
 
-        header.append("Operating System: ").append(System.getProperty("os.name")).append(" ").append(System.getProperty("os.version")).append("\n");
-        header.append("Java Version: ").append(System.getProperty("java.version")).append("\n");
+        header.append("Operating System:  ").append(System.getProperty("os.name")).append(" ").append(System.getProperty("os.version")).append("\n");
+        header.append("Java Version:      ").append(System.getProperty("java.version")).append("\n");
+        header.append("════════════════════════════════════════════════════════════════════════════════════\n");
+
+        // Print the header to the console
+        System.out.print(header.toString());
 
         fileWriter.println(header.toString());
         fileWriter.flush(); // Flush the buffer to ensure the header is written immediately
     }
+
 }
