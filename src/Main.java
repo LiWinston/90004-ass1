@@ -30,7 +30,7 @@ public class Main {
         Foyer foyer = new Foyer();
         Triage triage = new Triage();
         Treatment treatment = new Treatment();
-        Orderlies orderlies = new Orderlies();
+        Orderlies orderlies = Orderlies.getInstance();
         Specialist specialist = new Specialist(treatment);
 
         // generate the producer and consumer processes

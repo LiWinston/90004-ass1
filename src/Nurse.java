@@ -17,4 +17,8 @@ public class Nurse extends Thread{
     public void run() {
         super.run();
     }
+
+    public int getNurseId() {
+        return nurseId;
+    }
 }

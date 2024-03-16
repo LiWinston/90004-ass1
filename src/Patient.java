@@ -31,8 +31,8 @@ public class Patient {
     // create a new patient with a given identifier
     private Patient(int id) {
         this.id = id;
-        Random random = new Random();
-        this.severe = random.nextDouble() <= Params.SEVERE_PROPORTION;
+//        Random random = new Random();
+        this.severe = new Random().nextDouble() <= Params.SEVERE_PROPORTION;
         this.allocated = false;
         this.treated = false;
     }
