@@ -29,12 +29,10 @@ public class Logger {
     }
 
     public static Logger getInstance() {
-        if (instance == null) {
-            synchronized (lock) {
-                if (instance == null) {
-                    instance = new Logger();
-                    instance.writeHeader(); // Write header when initializing
-                }
+        if (instance == null) synchronized (lock) {
+            if (instance == null) {
+                instance = new Logger();
+                instance.writeHeader(); // Write header when initializing
             }
         }
         return instance;
@@ -70,6 +68,16 @@ public class Logger {
             fileWriter.flush(); // Flush the buffer to ensure the message is written immediately
         }
     }
+
+    public void log(Patient patient, String message) {
+        if (patient.Severe()) {
+            log("Patient " + patient.getId() + " (S)" + message);
+        } else {
+            log("Patient " + patient.getId() + message);
+        }
+    }
+
+
 
     public void close() {
         if (fileWriter != null) {
