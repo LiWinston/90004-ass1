@@ -4,11 +4,15 @@ import java.util.Random;
  * A patient, with a unique id, who will present to the emergency department.
  * 
  * @author ngeard@unimelb.edu.au
- * @date 13 February 2024
+ * &#064;date 13 February 2024
  * implemented by: Yongchunli 1378156
  */
 
 public class Patient {
+    public int getId() {
+        return id;
+    }
+
     // a unique identifier for this patient
     private final int id;
     

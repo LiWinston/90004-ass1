@@ -26,7 +26,6 @@ public class Logger {
         } catch (IOException e) {
             e.printStackTrace(); // Handle file initialization error
         }
-        writeHeader(); // Write header when initializing
     }
 
     public static Logger getInstance() {
@@ -34,6 +33,7 @@ public class Logger {
             synchronized (lock) {
                 if (instance == null) {
                     instance = new Logger();
+                    instance.writeHeader(); // Write header when initializing
                 }
             }
         }
@@ -66,7 +66,6 @@ public class Logger {
             System.out.println(message);
         }
         if (fileOutputEnabled) {
-            writeHeader(); // Write the header before each log message
             fileWriter.println(message);
             fileWriter.flush(); // Flush the buffer to ensure the message is written immediately
         }
