@@ -21,6 +21,7 @@ public class Nurse extends Thread {
         super.run();
         while (!isInterrupted()) {
             synchronized (this) {
+                //if nurse busy, wait until the patient deallocated
                 while (allocated && !isInterrupted()) {
                     try {
                         wait();
@@ -29,6 +30,8 @@ public class Nurse extends Thread {
                         return;
                     }
                 }
+
+                //if the nurse is free, then try to help the patient arriving in the foyer
                 Patient patient = foyer.getArrivingPatient();
                 if (patient != null) {
                     synchronized (patient) {
@@ -43,6 +46,7 @@ public class Nurse extends Thread {
                         }
                     }
                 }
+                //end of synchronized block
             }
         }
     }
