@@ -22,7 +22,7 @@ public class Producer extends Thread {
             try {
                 // create a new patient and admit it to the ED.
                 Patient patient = Patient.getNewPatient();
-                this.foyer.arriveAtED(patient);
+                this.foyer.admitToEd(patient);
 
                 // let some time pass before the next patient is admitted
                 sleep(Params.arrivalPause());

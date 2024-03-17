@@ -1,4 +1,7 @@
-public class Foyer {
+
+import java.util.Objects;
+
+public class Foyer implements Movable {
     public Patient getArrivingPatient() {
         return ArrivingPatient;
     }
@@ -14,7 +17,7 @@ public class Foyer {
         }
     }
 
-    public synchronized void arriveAtED(Patient patient) {
+    public synchronized void admitToEd(Patient patient) {
         if(ArrivingPatient == null) {
             Logger.getInstance().log(patient, " admitted to ED.");
             ArrivingPatient = patient;
@@ -35,5 +38,30 @@ public class Foyer {
 
     public void setArrivingPatient(Patient patient) {
         ArrivingPatient = patient;
+    }
+
+    @Override
+    public boolean isAccessible() {
+        return DepartingPatient == null;
+    }
+
+    @Override
+    public void enter(Patient patient) {
+        synchronized (this) {
+            if (ArrivingPatient == null) {
+                ArrivingPatient = patient;
+                Logger.getInstance().log(ArrivingPatient, " enters Foyer.");
+            }
+        }
+    }
+
+    @Override
+    public void leave(Patient patient) {
+        if(Objects.equals(patient, ArrivingPatient)) {
+            ArrivingPatient = null;
+        }else{
+            System.out.println("### WARNING: Patient " + patient.getId() + " to leave is not in the foyer.");
+        }
+        Logger.getInstance().log(DepartingPatient, " leaves Foyer.");
     }
 }
