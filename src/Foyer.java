@@ -9,7 +9,7 @@ public class Foyer {
     public synchronized void departFromED() {
         if(DepartingPatient != null) {
             DepartingPatient.getNurse().deallocatePatient(DepartingPatient);
-            Logger.getInstance().log(DepartingPatient, "departed from ED.");
+            Logger.getInstance().log(DepartingPatient, " departed from ED.");
             DepartingPatient = null;
         }
     }
@@ -27,5 +27,9 @@ public class Foyer {
 
     public synchronized boolean isExitAvailable() {
         return DepartingPatient == null;
+    }
+
+    public void setDepartingPatient(Patient patient) {
+        DepartingPatient = patient;
     }
 }
