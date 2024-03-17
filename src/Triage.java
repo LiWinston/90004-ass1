@@ -7,7 +7,7 @@ public class Triage implements Movable {
     }
 
     @Override
-    public void enter(Patient patient) {
+    public synchronized void enter(Patient patient) {
         this.patient = patient;
         patient.setLocation(this);
         Logger.getInstance().log(patient, " enters triage.");

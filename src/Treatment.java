@@ -7,20 +7,20 @@ public class Treatment implements Movable {
 
     @Override
     public boolean isAccessible() {
-        return true;
+        return patient == null;
     }
 
     @Override
-    public void enter(Patient patient) {
-        this.patient = patient;
+    public synchronized void enter(Patient patient) {
         patient.setLocation(this);
+        this.patient = patient;
         Logger.getInstance().log(patient, "  enters treatment room.");
     }
 
     @Override
     public void leave(Patient patient) {
-        this.patient = null;
         patient.setLocation(null);
+        this.patient = null;
         Logger.getInstance().log(patient, " leaves treatment room.");
     }
 }
