@@ -1,11 +1,13 @@
 import java.util.Random;
 
 /**
- * A patient, with a unique id, who will present to the emergency department.
+ * Represents a patient who presents to the emergency department, identified by a unique ID.
+ * Patients may have varying levels of severity in their conditions.
+ * Patients can be allocated to a nurse for treatment.
  *
  * @author ngeard@unimelb.edu.au
  * &#064;date 13 February 2024
- * implemented by: Yongchunli 1378156
+ * modified by: yongchunl@student.unimelb.edu.au
  */
 
 public class Patient {
@@ -22,7 +24,7 @@ public class Patient {
     private volatile Movable location;
     private volatile Movable destination;
     private Nurse nurse;
-    // create a new patient with a given identifier
+    // private constructor to create a new patient with a given identifier
     private Patient(int id) {
         this.id = id;
 //        Random random = new Random();
@@ -31,19 +33,38 @@ public class Patient {
         this.treated = false;
     }
 
-    // get a new Patient instance with a unique identifier
+    /**
+     * Returns a new Patient instance with a unique identifier.
+     *
+     * @return a new Patient instance
+     */
     public static Patient getNewPatient() {
         return new Patient(nextId++);
     }
 
+    /**
+     * Gets the current location of the patient.
+     *
+     * @return the current location of the patient
+     */
     public Movable getLocation() {
         return location;
     }
 
+    /**
+     * Sets the location of the patient.
+     *
+     * @param location the location to set
+     */
     public void setLocation(Movable location) {
         this.location = location;
     }
 
+    /**
+     * Gets the unique identifier of the patient.
+     *
+     * @return the patient's ID
+     */
     public int getId() {
         return id;
     }
@@ -61,10 +82,20 @@ public class Patient {
         return s;
     }
 
+    /**
+     * Gets the nurse allocated to the patient.
+     *
+     * @return the nurse allocated to the patient
+     */
     public Nurse getNurse() {
         return nurse;
     }
 
+    /**
+     * Sets the nurse allocated to the patient.
+     *
+     * @param nurse the nurse to allocate to the patient
+     */
     public void setNurse(Nurse nurse) {
         synchronized (this) {
             if (!this.allocated) {
@@ -81,9 +112,13 @@ public class Patient {
     }
 
     /**
-     * Side effect: set the patient's destination based on the patient's location and the patient's condition (refresh)
+     * serves as a getter for the patient's destination and also have the side effect *:
+     * set the patient's destination based on the patient's location and the patient's condition (refresher)
+     * <p>
+     * This method controls the patient's movement within the emergency department,
+     * directing them to the appropriate location based on their condition and current location.
      *
-     * @return the patient's destination (used as getter)
+     * @return the patient's destination
      */
     public synchronized Movable loadDestination() {
         // Centrally control the patient's movement on the basis of the patient's location and the patient's condition

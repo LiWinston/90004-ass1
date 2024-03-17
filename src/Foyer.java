@@ -1,67 +1,99 @@
 import java.util.Objects;
 
+/**
+ * Represents the foyer area in a medical facility.
+ * Implements the Movable interface.
+ * @author yongchunl@student.unimelb.edu.au
+ */
 public class Foyer implements Movable {
-    volatile private Patient ArrivingPatient;
-    volatile private Patient DepartingPatient;
 
+    /** The space for patient arriving at the foyer. */
+    private volatile Patient arrivingPatient;
+
+    /** The space for patient discharging from the foyer. */
+    private volatile Patient departingPatient;
+
+    /**
+     * Gets the arriving patient.
+     * @return The arriving patient.
+     */
     public Patient getArrivingPatient() {
-        return ArrivingPatient;
+        return arrivingPatient;
     }
 
+    /**
+     * Sets the arriving patient.
+     * @param patient The arriving patient.
+     */
     public void setArrivingPatient(Patient patient) {
-        ArrivingPatient = patient;
+        arrivingPatient = patient;
     }
 
+    /**
+     * Discharge the patient from the emergency department (ED).
+     */
     public synchronized void departFromED() {
-        if (DepartingPatient != null) {
-//            DepartingPatient.getNurse().deallocatePatient(DepartingPatient);
-            Logger.getInstance().log(DepartingPatient, " discharged from ED.");
-            DepartingPatient = null;
+        if (departingPatient != null) {
+            Logger.getInstance().log(departingPatient, " discharged from ED.");
+            departingPatient = null;
         }
     }
 
+    /**
+     * Admits a patient to the emergency department (ED).
+     * @param patient The patient to be admitted.
+     */
     public synchronized void admitToEd(Patient patient) {
-        //patient from outside to ED -- referred as admitToEd()
-        if (ArrivingPatient == null) {
+        if (arrivingPatient == null) {
             Logger.getInstance().log(patient, " admitted to ED.");
-            ArrivingPatient = patient;
+            arrivingPatient = patient;
             patient.setLocation(this);
         }
     }
 
+    /**
+     * Checks if the entry to the foyer is available.
+     * @return True if the entry is available, otherwise false.
+     */
     public synchronized boolean isEntryAvailable() {
-        return ArrivingPatient == null;
+        return arrivingPatient == null;
     }
 
+    /**
+     * Checks if the exit from the foyer is available.
+     * @return True if the exit is available, otherwise false.
+     */
     public synchronized boolean isExitAvailable() {
-        return DepartingPatient == null;
+        return departingPatient == null;
     }
 
+    /**
+     * Sets the departing patient.
+     * @param patient The departing patient.
+     */
     public void setDepartingPatient(Patient patient) {
-        DepartingPatient = patient;
+        departingPatient = patient;
     }
 
     @Override
     public boolean isAccessible() {
-        return DepartingPatient == null;
+        return departingPatient == null;
     }
 
     @Override
     public synchronized void enter(Patient patient) {
-        //patient from inside ED to Foyer -- referred as enter()
-        if (DepartingPatient == null) {
-            DepartingPatient = patient;
+        if (departingPatient == null) {
+            departingPatient = patient;
             patient.setLocation(this);
             Logger.getInstance().log(patient, " enters Foyer.");
-            //patient returning doesn't need to be accompanied by a nurse, weather the patient is severe or not
-            patient.getNurse().deallocatePatient(DepartingPatient);
+            patient.getNurse().deallocatePatient(departingPatient);
         }
     }
 
     @Override
     public void leave(Patient patient) {
-        if (Objects.equals(patient, ArrivingPatient)) {
-            ArrivingPatient = null;
+        if (Objects.equals(patient, arrivingPatient)) {
+            arrivingPatient = null;
             patient.setLocation(null);
             Logger.getInstance().log(patient, " leaves Foyer.");
         } else {
