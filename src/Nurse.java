@@ -81,17 +81,17 @@ public class Nurse extends Thread {
                         //try moving the patient to the next destination
                         if (patient != null && patient.getLocation() != null) {
                             //Try to Employ the orderlies. TODO :Should here be synchronized or try{}catch{} again?
-                            //Cant leave before assistance from orderlies is available
+                            //Can‘t leave before assistance from orderlies is available
                             orderlies.recruitOrderlies(this, Params.TRANSFER_ORDERLIES);
-                            //leave the current location first is okay, according to ED discussion
-                            //String dst = patient.loadDestination().getClass().getSimpleName();
-                            //Logger.getInstance().log("➡️-- patient " + patient.getId() + " is HEADING to " + dst);
+
+                            //Refresh the destination before position change
                             patient.loadDestination();
+                            //leave the current location prior to destination turning prepared is okay -- ED discussion
                             patient.getLocation().leave(patient);
 
                             if (patient.loadDestination().isAccessible()) {
                                 //Logger.getInstance().log("Nurse " + nurseId + " is transferring Patient " + patient.getId() + " to " + patient.loadDestination().getClass().getSimpleName() + ".");
-
+                                //Apply the transfer time
                                 wait(Params.TRANSFER_TIME);
                                 patient.loadDestination().enter(patient);
                                 orderlies.releaseOrderlies(this);
