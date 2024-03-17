@@ -14,10 +14,10 @@ public class Specialist extends Thread {
             try {
                 // Check if there is a patient in treatment
                 if (isAtTreatment) {
-                    if(null == treatment.getPatient()) {
+                    if (null == treatment.getPatient()) {
                         continue;
                     }
-                        // Treat the patient
+                    // Treat the patient
                     synchronized (treatment.getPatient()) {
                         treatPatient();
                     }
@@ -54,14 +54,14 @@ public class Specialist extends Thread {
     }
 
     // Method to leave the treatment room
-    private void leaveTreatmentRoom() {
+    private synchronized void leaveTreatmentRoom() {
         // Log leaving treatment room
         Logger.getInstance().log("Specialist leaves treatment room.");
         isAtTreatment = false;
     }
 
     // Method to return to treatment room
-    private void returnToTreatmentRoom() {
+    private synchronized void returnToTreatmentRoom() {
         // Log returning to treatment room
         Logger.getInstance().log("Specialist enters treatment room.");
         isAtTreatment = true;
