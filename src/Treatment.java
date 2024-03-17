@@ -14,7 +14,7 @@ public class Treatment implements Movable {
     public synchronized void enter(Patient patient) {
         patient.setLocation(this);
         this.patient = patient;
-        Logger.getInstance().log(patient, "  enters treatment room.");
+        Logger.getInstance().log(patient, " enters treatment room.");
     }
 
     @Override
