@@ -1,4 +1,4 @@
-public class Treatment implements Movable{
+public class Treatment implements Movable {
     @Override
     public boolean isAccessible() {
         return true;

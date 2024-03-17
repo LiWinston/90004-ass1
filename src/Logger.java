@@ -8,9 +8,8 @@ import java.util.Date;
 import java.util.Enumeration;
 
 public class Logger {
-    private static Logger instance;
     private static final Object lock = new Object();
-
+    private static Logger instance;
     boolean consoleOutputEnabled;
     boolean fileOutputEnabled;
     String logFilePath;
@@ -76,7 +75,6 @@ public class Logger {
             log("Patient " + patient.getId() + message);
         }
     }
-
 
 
     public void close() {

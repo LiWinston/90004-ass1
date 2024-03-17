@@ -19,15 +19,9 @@ public class Patient {
     protected volatile boolean allocated;
     // a flag indicating whether a patient has been treated
     protected volatile boolean treated;
-
-    public Movable getLocation() {
-        return location;
-    }
-
     private volatile Movable location;
     private volatile Movable destination;
     private Nurse nurse;
-
     // create a new patient with a given identifier
     private Patient(int id) {
         this.id = id;
@@ -40,6 +34,14 @@ public class Patient {
     // get a new Patient instance with a unique identifier
     public static Patient getNewPatient() {
         return new Patient(nextId++);
+    }
+
+    public Movable getLocation() {
+        return location;
+    }
+
+    public void setLocation(Movable location) {
+        this.location = location;
     }
 
     public int getId() {
@@ -80,6 +82,7 @@ public class Patient {
 
     /**
      * Side effect: set the patient's destination based on the patient's location and the patient's condition (refresh)
+     *
      * @return the patient's destination (used as getter)
      */
     public synchronized Movable loadDestination() {
@@ -101,9 +104,5 @@ public class Patient {
                 throw new IllegalStateException("????");
         }
         return destination;
-    }
-
-    public void setLocation(Movable location) {
-        this.location = location;
     }
 }

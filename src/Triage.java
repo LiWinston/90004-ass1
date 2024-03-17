@@ -1,4 +1,4 @@
-public class Triage implements Movable{
+public class Triage implements Movable {
 
     @Override
     public boolean isAccessible() {

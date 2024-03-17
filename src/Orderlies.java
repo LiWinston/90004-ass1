@@ -2,10 +2,9 @@ import java.util.Hashtable;
 
 public class Orderlies {
     private static Orderlies instance;
-    private int TRANSFER_ORDERLIES;
-
-    private volatile int freeOrderlies;
     private final Hashtable<Integer, Integer> recruitRecord = new Hashtable<>();
+    private int TRANSFER_ORDERLIES;
+    private volatile int freeOrderlies;
 
     public Orderlies() {
         this.freeOrderlies = Params.ORDERLIES;
@@ -22,7 +21,7 @@ public class Orderlies {
     public void recruitOrderlies(Nurse nurse, int numOrderlies) {
         //get orderlies in thread safe way
         synchronized (this) {
-            if(recruitRecord.containsKey(nurse.getNurseId())){
+            if (recruitRecord.containsKey(nurse.getNurseId())) {
                 //prohibit the nurse from recruiting orderlies again before the previous orderlies are released
                 Logger.getInstance().log("♦️Nurse " + nurse.getNurseId() + " is not allowed to recruit orderlies again" +
                         " before the previous orderlies are released");
@@ -42,9 +41,9 @@ public class Orderlies {
         }
     }
 
-public void releaseOrderlies(Nurse nurse) {
+    public void releaseOrderlies(Nurse nurse) {
         synchronized (this) {
-            if(recruitRecord.containsKey(nurse.getNurseId())){
+            if (recruitRecord.containsKey(nurse.getNurseId())) {
                 int numOrderlies = recruitRecord.get(nurse.getNurseId());
                 freeOrderlies += numOrderlies;
                 recruitRecord.remove(nurse.getNurseId());

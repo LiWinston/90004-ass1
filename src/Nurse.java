@@ -1,6 +1,19 @@
 public class Nurse extends Thread {
-    private int nurseId;
+    private final int nurseId;
     private Patient patient;
+    private final Foyer foyer;
+    private final Triage triage;
+    private final Orderlies orderlies;
+    private final Treatment treatment;
+    private boolean allocated = false;
+    public Nurse(int i, Foyer foyer, Triage triage, Orderlies orderlies, Treatment treatment) {
+        this.nurseId = i;
+        this.foyer = foyer;
+        this.triage = triage;
+        this.orderlies = orderlies;
+        this.treatment = treatment;
+        this.allocated = false;
+    }
 
     public Foyer getFoyer() {
         return foyer;
@@ -14,22 +27,6 @@ public class Nurse extends Thread {
         return treatment;
     }
 
-    private Foyer foyer;
-    private Triage triage;
-    private Orderlies orderlies;
-    private Treatment treatment;
-
-    private boolean allocated = false;
-
-    public Nurse(int i, Foyer foyer, Triage triage, Orderlies orderlies, Treatment treatment) {
-        this.nurseId = i;
-        this.foyer = foyer;
-        this.triage = triage;
-        this.orderlies = orderlies;
-        this.treatment = treatment;
-        this.allocated = false;
-    }
-
     @Override
     public void run() {
         super.run();
@@ -39,12 +36,12 @@ public class Nurse extends Thread {
                 while (allocated && !isInterrupted()) {
                     try {
                         //try moving the patient to the next destination
-                        if (patient != null && patient.getLocation() !=null){
+                        if (patient != null && patient.getLocation() != null) {
                             //Try to Employ the orderlies. TODO :Should here be synchronized or try{}catch{} again?
                             orderlies.recruitOrderlies(this, Params.TRANSFER_ORDERLIES);
                             //leave the current location first is okay, according to ED discussion
                             String dst = patient.loadDestination().getClass().toString();
-                            Logger.getInstance().log("➡️-- patient "+patient.getId() +" is HEADING to "+ dst);
+                            Logger.getInstance().log("➡️-- patient " + patient.getId() + " is HEADING to " + dst);
                             patient.getLocation().leave(patient);
 
                             if (patient.loadDestination().isAccessible()) {

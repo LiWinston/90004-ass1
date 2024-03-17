@@ -1,16 +1,19 @@
-
 import java.util.Objects;
 
 public class Foyer implements Movable {
+    volatile private Patient ArrivingPatient;
+    volatile private Patient DepartingPatient;
+
     public Patient getArrivingPatient() {
         return ArrivingPatient;
     }
 
-    volatile private Patient ArrivingPatient;
-    volatile private Patient DepartingPatient;
+    public void setArrivingPatient(Patient patient) {
+        ArrivingPatient = patient;
+    }
 
     public synchronized void departFromED() {
-        if(DepartingPatient != null) {
+        if (DepartingPatient != null) {
 //            DepartingPatient.getNurse().deallocatePatient(DepartingPatient);
             Logger.getInstance().log(DepartingPatient, " departed from ED.");
             DepartingPatient = null;
@@ -19,7 +22,7 @@ public class Foyer implements Movable {
 
     public synchronized void admitToEd(Patient patient) {
         //patient from outside to ED -- referred as admitToEd()
-        if(ArrivingPatient == null) {
+        if (ArrivingPatient == null) {
             Logger.getInstance().log(patient, " admitted to ED.");
             ArrivingPatient = patient;
             patient.setLocation(this);
@@ -36,10 +39,6 @@ public class Foyer implements Movable {
 
     public void setDepartingPatient(Patient patient) {
         DepartingPatient = patient;
-    }
-
-    public void setArrivingPatient(Patient patient) {
-        ArrivingPatient = patient;
     }
 
     @Override
@@ -63,11 +62,11 @@ public class Foyer implements Movable {
 
     @Override
     public void leave(Patient patient) {
-        if(Objects.equals(patient, ArrivingPatient)) {
+        if (Objects.equals(patient, ArrivingPatient)) {
             ArrivingPatient = null;
             patient.setLocation(null);
             Logger.getInstance().log(patient, " leaves Foyer.");
-        }else{
+        } else {
             System.out.println("### WARNING: Patient " + patient.getId() + " to leave is not in the foyer.");
         }
     }
