@@ -62,11 +62,13 @@ public class Nurse extends Thread {
             foyer.setDepartingPatient(patient);
         }
     }
+
     public void deallocatePatient(Patient patient) {
         synchronized (this) {
-            patient.allocated = false;
+//            patient.allocated = false;
             allocated = false;
-            patient.setNurse(null);
+//            patient.setNurse(null);
+// We don't need to set the nurse to null, else the patient will be allocated to another nurse,they just need to be departed from ED directly
             Logger.getInstance().log("Nurse " + nurseId + " deallocated from Patient " + patient.getId() + ".");
             notifyAll();
         }
