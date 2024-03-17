@@ -1,11 +1,12 @@
 public class Nurse extends Thread {
     private final int nurseId;
-    private Patient patient;
     private final Foyer foyer;
     private final Triage triage;
     private final Orderlies orderlies;
     private final Treatment treatment;
+    private Patient patient;
     private boolean allocated = false;
+
     public Nurse(int i, Foyer foyer, Triage triage, Orderlies orderlies, Treatment treatment) {
         this.nurseId = i;
         this.foyer = foyer;
@@ -40,8 +41,9 @@ public class Nurse extends Thread {
                             //Try to Employ the orderlies. TODO :Should here be synchronized or try{}catch{} again?
                             orderlies.recruitOrderlies(this, Params.TRANSFER_ORDERLIES);
                             //leave the current location first is okay, according to ED discussion
-                            String dst = patient.loadDestination().getClass().toString();
-                            Logger.getInstance().log("➡️-- patient " + patient.getId() + " is HEADING to " + dst);
+                            //String dst = patient.loadDestination().getClass().getSimpleName();
+                            //Logger.getInstance().log("➡️-- patient " + patient.getId() + " is HEADING to " + dst);
+                            patient.loadDestination();
                             patient.getLocation().leave(patient);
 
                             if (patient.loadDestination().isAccessible()) {
