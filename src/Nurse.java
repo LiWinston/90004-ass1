@@ -43,8 +43,8 @@ public class Nurse extends Thread {
                             //Try to Employ the orderlies. TODO :Should here be synchronized or try{}catch{} again?
                             orderlies.recruitOrderlies(this, Params.TRANSFER_ORDERLIES);
                             //leave the current location first is okay, according to ED discussion
-                            String dst = patient.loadDestination().toString();
-                            Logger.getInstance().log("———————————————————————— patient "+patient.getId() +"TOWARDS "+ dst);
+                            String dst = patient.loadDestination().getClass().toString();
+                            Logger.getInstance().log("➡️-- patient "+patient.getId() +" is HEADING to "+ dst);
                             patient.getLocation().leave(patient);
 
                             if (patient.loadDestination().isAccessible()) {

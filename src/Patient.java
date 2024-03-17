@@ -90,15 +90,17 @@ public class Patient {
         switch (location.getClass().getSimpleName()) {
             case "Foyer":
                 destination = nurse.getTriage();
-                return nurse.getTriage();
+                break;
             case "Triage":
                 destination = Severe() ? nurse.getTreatment() : nurse.getFoyer();
+                break;
             case "Treatment":
                 destination = nurse.getFoyer();
-                return destination;
+                break;
             default:
                 throw new IllegalStateException("????");
         }
+        return destination;
     }
 
     public void setLocation(Movable location) {
