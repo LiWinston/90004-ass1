@@ -1,4 +1,5 @@
 public class Treatment implements Movable {
+    private Patient patient;
     @Override
     public boolean isAccessible() {
         return true;
@@ -6,6 +7,7 @@ public class Treatment implements Movable {
 
     @Override
     public void enter(Patient patient) {
+        this.patient = patient;
         patient.setLocation(this);
         Logger.getInstance().log(patient, " enters Treatment.");
     }
