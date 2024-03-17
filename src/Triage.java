@@ -1,24 +1,27 @@
 public class Triage implements Movable {
 
+    private Patient patient;
     @Override
     public boolean isAccessible() {
-        return true;
+        return patient == null;
     }
 
     @Override
     public void enter(Patient patient) {
+        this.patient = patient;
         patient.setLocation(this);
-        Logger.getInstance().log(patient, " enters Triage.");
-    }
-
-    @Override
-    public void leave(Patient patient) {
-        patient.setLocation(null);
+        Logger.getInstance().log(patient, " enters triage.");
         try {
             Thread.sleep(Params.TRIAGE_TIME);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        Logger.getInstance().log(patient, " leaves Triage.");
+    }
+
+    @Override
+    public void leave(Patient patient) {
+        patient.setLocation(null);
+        this.patient = null;
+        Logger.getInstance().log(patient, " leaves triage.");
     }
 }
