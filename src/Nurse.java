@@ -59,7 +59,19 @@ public class Nurse extends Thread {
             allocated = true;
             String severe = patient.Severe() ? " (S)" : "";
             Logger.getInstance().log("Nurse " + nurseId + " allocated to Patient " + patient.getId() + severe + ".");
+            /*
+            Testing purpose
+             Only for continuous adding and removing patients inside the foyer
+             TODO: remove this part
+             */
+            foyer.setArrivingPatient(null);
             foyer.setDepartingPatient(patient);
+            /*
+            Testing purpose
+             Only for continuous adding and removing patients inside the foyer
+             TODO: remove this part
+             */ //end
+
         }
     }
 

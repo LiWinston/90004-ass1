@@ -32,4 +32,8 @@ public class Foyer {
     public void setDepartingPatient(Patient patient) {
         DepartingPatient = patient;
     }
+
+    public void setArrivingPatient(Patient patient) {
+        ArrivingPatient = patient;
+    }
 }
