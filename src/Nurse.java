@@ -64,7 +64,10 @@ public class Nurse extends Thread {
     public void deallocatePatient(Patient patient) {
         synchronized (this) {
             patient.allocated = false;
+            allocated = false;
+            patient.setNurse(null);
             Logger.getInstance().log("Nurse " + nurseId + " deallocated from Patient " + patient.getId() + ".");
+            notifyAll();
         }
     }
 }

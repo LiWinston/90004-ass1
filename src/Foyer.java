@@ -8,6 +8,7 @@ public class Foyer {
 
     public synchronized void departFromED() {
         if(DepartingPatient != null) {
+            DepartingPatient.getNurse().deallocatePatient(DepartingPatient);
             Logger.getInstance().log(DepartingPatient, "departed from ED.");
             DepartingPatient = null;
         }
