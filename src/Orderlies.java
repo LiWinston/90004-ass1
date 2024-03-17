@@ -24,7 +24,7 @@ public class Orderlies {
         synchronized (this) {
             if(recruitRecord.containsKey(nurse.getNurseId())){
                 //prohibit the nurse from recruiting orderlies again before the previous orderlies are released
-                Logger.getInstance().log("Nurse " + nurse.getNurseId() + " is not allowed to recruit orderlies again" +
+                Logger.getInstance().log("♦️Nurse " + nurse.getNurseId() + " is not allowed to recruit orderlies again" +
                         " before the previous orderlies are released");
                 return;
             }
@@ -38,6 +38,7 @@ public class Orderlies {
             freeOrderlies -= numOrderlies;
             recruitRecord.put(nurse.getNurseId(), numOrderlies);
             Logger.getInstance().log("Nurse " + nurse.getNurseId() + " recruits " + numOrderlies + " orderlies");
+            notify();
         }
     }
 

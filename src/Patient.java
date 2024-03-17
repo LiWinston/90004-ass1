@@ -9,26 +9,24 @@ import java.util.Random;
  */
 
 public class Patient {
-    private Nurse nurse;
-
-    public int getId() {
-        return id;
-    }
-
+    // the next ID to be allocated
+    private static int nextId = 1;
     // a unique identifier for this patient
     private final int id;
-
-    // a flag indicating whether a patient is allocated to a nurse
-    protected volatile boolean allocated;
-
     // a flag indicating whether a patient's condition is severe
     private final boolean severe;
-
+    // a flag indicating whether a patient is allocated to a nurse
+    protected volatile boolean allocated;
     // a flag indicating whether a patient has been treated
     protected volatile boolean treated;
 
-    // the next ID to be allocated
-    private static int nextId = 1;
+    public Movable getLocation() {
+        return location;
+    }
+
+    private volatile Movable location;
+    private volatile Movable destination;
+    private Nurse nurse;
 
     // create a new patient with a given identifier
     private Patient(int id) {
@@ -44,6 +42,9 @@ public class Patient {
         return new Patient(nextId++);
     }
 
+    public int getId() {
+        return id;
+    }
 
     public boolean Severe() {
         return this.severe;
@@ -56,6 +57,10 @@ public class Patient {
             s = s + " (S)";
         }
         return s;
+    }
+
+    public Nurse getNurse() {
+        return nurse;
     }
 
     public void setNurse(Nurse nurse) {
@@ -73,7 +78,30 @@ public class Patient {
         }
     }
 
-    public Nurse getNurse() {
-        return nurse;
+    /**
+     * Side effect: set the patient's destination based on the patient's location and the patient's condition (refresh)
+     * @return the patient's destination (used as getter)
+     */
+    public synchronized Movable loadDestination() {
+        // Centrally control the patient's movement on the basis of the patient's location and the patient's condition
+        if (location == null) {
+            return destination;
+        }
+        switch (location.getClass().getSimpleName()) {
+            case "Foyer":
+                destination = nurse.getTriage();
+                return nurse.getTriage();
+            case "Triage":
+                destination = Severe() ? nurse.getTreatment() : nurse.getFoyer();
+            case "Treatment":
+                destination = nurse.getFoyer();
+                return destination;
+            default:
+                throw new IllegalStateException("????");
+        }
+    }
+
+    public void setLocation(Movable location) {
+        this.location = location;
     }
 }

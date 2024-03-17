@@ -22,6 +22,7 @@ public class Foyer implements Movable {
         if(ArrivingPatient == null) {
             Logger.getInstance().log(patient, " admitted to ED.");
             ArrivingPatient = patient;
+            patient.setLocation(this);
         }
     }
 
@@ -52,7 +53,9 @@ public class Foyer implements Movable {
         synchronized (this) {
             if (DepartingPatient == null) {
                 DepartingPatient = patient;
+                patient.setLocation(this);
                 Logger.getInstance().log(patient, " enters Foyer.");
+                //patient returning doesn't need to be accompanied by a nurse, weather the patient is severe or not
                 patient.getNurse().deallocatePatient(DepartingPatient);
             }
         }
@@ -62,6 +65,7 @@ public class Foyer implements Movable {
     public void leave(Patient patient) {
         if(Objects.equals(patient, ArrivingPatient)) {
             ArrivingPatient = null;
+            patient.setLocation(null);
             Logger.getInstance().log(patient, " leaves Foyer.");
         }else{
             System.out.println("### WARNING: Patient " + patient.getId() + " to leave is not in the foyer.");
