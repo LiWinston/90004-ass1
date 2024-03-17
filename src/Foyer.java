@@ -47,16 +47,14 @@ public class Foyer implements Movable {
     }
 
     @Override
-    public void enter(Patient patient) {
+    public synchronized void enter(Patient patient) {
         //patient from inside ED to Foyer -- referred as enter()
-        synchronized (this) {
-            if (DepartingPatient == null) {
-                DepartingPatient = patient;
-                patient.setLocation(this);
-                Logger.getInstance().log(patient, " enters Foyer.");
-                //patient returning doesn't need to be accompanied by a nurse, weather the patient is severe or not
-                patient.getNurse().deallocatePatient(DepartingPatient);
-            }
+        if (DepartingPatient == null) {
+            DepartingPatient = patient;
+            patient.setLocation(this);
+            Logger.getInstance().log(patient, " enters Foyer.");
+            //patient returning doesn't need to be accompanied by a nurse, weather the patient is severe or not
+            patient.getNurse().deallocatePatient(DepartingPatient);
         }
     }
 
