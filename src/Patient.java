@@ -9,6 +9,8 @@ import java.util.Random;
  */
 
 public class Patient {
+    private Nurse nurse;
+
     public int getId() {
         return id;
     }
@@ -54,5 +56,16 @@ public class Patient {
     		s = s + " (S)";
     	}
         return s;
+    }
+
+    public void setNurse(Nurse nurse) {
+        synchronized (this) {
+            if (!this.allocated) {
+                this.nurse = nurse;
+                this.allocated = true;
+            }else {
+                throw new IllegalStateException("Patient " + this.id + " has already been allocated to a nurse.");
+            }
+        }
     }
 }
