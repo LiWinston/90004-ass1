@@ -36,7 +36,8 @@ public class Orderlies {
             }
             freeOrderlies -= numOrderlies;
             recruitRecord.put(nurse.getNurseId(), numOrderlies);
-            Logger.getInstance().log("Nurse " + nurse.getNurseId() + " recruits " + numOrderlies + " orderlies");
+            Logger.getInstance().log("Nurse " + nurse.getNurseId() + " recruits " + numOrderlies + " orderlies " +
+                    "(" + freeOrderlies + " free).");
             notify();
         }
     }
@@ -47,7 +48,8 @@ public class Orderlies {
                 int numOrderlies = recruitRecord.get(nurse.getNurseId());
                 freeOrderlies += numOrderlies;
                 recruitRecord.remove(nurse.getNurseId());
-                Logger.getInstance().log("Nurse " + nurse.getNurseId() + " releases " + numOrderlies + " orderlies");
+                Logger.getInstance().log("Nurse " + nurse.getNurseId() + " releases " + numOrderlies + " orderlies " +
+                        "(" + freeOrderlies + " free).");
                 this.notifyAll();
             }
         }

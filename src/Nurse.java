@@ -48,8 +48,7 @@ public class Nurse extends Thread {
                             patient.getLocation().leave(patient);
 
                             if (patient.loadDestination().isAccessible()) {
-                                //
-                                Logger.getInstance().log("Nurse " + nurseId + " is transferring Patient " + patient.getId() + " to " + patient.loadDestination().getClass().getSimpleName() + ".");
+                                //Logger.getInstance().log("Nurse " + nurseId + " is transferring Patient " + patient.getId() + " to " + patient.loadDestination().getClass().getSimpleName() + ".");
 
                                 wait(Params.TRANSFER_TIME);
                                 patient.loadDestination().enter(patient);
