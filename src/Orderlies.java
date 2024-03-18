@@ -12,7 +12,6 @@ import java.util.Hashtable;
 public class Orderlies {
     private static Orderlies instance;
     private final Hashtable<Integer, Integer> recruitRecord = new Hashtable<>();
-    private int TRANSFER_ORDERLIES;
     private volatile int freeOrderlies;
 
     /**
@@ -20,7 +19,6 @@ public class Orderlies {
      */
     public Orderlies() {
         this.freeOrderlies = Params.ORDERLIES;
-        this.TRANSFER_ORDERLIES = Params.TRANSFER_ORDERLIES;
     }
 
     /**

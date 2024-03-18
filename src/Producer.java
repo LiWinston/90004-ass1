@@ -7,7 +7,7 @@
 
 public class Producer extends Thread {
 
-    private Foyer foyer;
+    private final Foyer foyer;
 
     // create a new producer
     Producer(Foyer newFoyer) {
