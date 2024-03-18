@@ -80,8 +80,8 @@ public class Nurse extends Thread {
                     try {
                         //try moving the patient to the next destination
                         if (patient != null && patient.getLocation() != null) {
-                            while (patient.getLocation() == treatment && !treatment.getSpecialist().isAtTreatment()) {
-                                //If the patient is in the treatment room and the specialist is absent, then wait
+                            while (patient.getLocation() == treatment && !patient.treated) {
+                                //If in the treatment and not yet treated, then wait
                                 try {
                                     wait();
                                 } catch (InterruptedException e) {
@@ -107,7 +107,7 @@ public class Nurse extends Thread {
                                     patient.loadDestination().enter(patient);
                                     orderlies.releaseOrderlies(this);
                                 }
-                                notify();
+                                dst.notify();
                             }
                         }
                     } catch (InterruptedException e) {
