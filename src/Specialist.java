@@ -1,10 +1,10 @@
 /**
  * Represents a specialist who performs treatment procedures on patients in a treatment room.
  * The specialist periodically treats patients and alternates between being in the treatment room and being away.
+ *
  * @author yongchunl@student.unimelb.edu.au
  * @version 1.0
  * @since 2024-03-18
-
  */
 public class Specialist extends Thread {
     private final Treatment treatment;
@@ -18,6 +18,7 @@ public class Specialist extends Thread {
     public Specialist(Treatment treatment) {
         this.treatment = treatment;
         this.isAtTreatment = true;
+        treatment.setSpecialist(this);
     }
 
     /**
@@ -26,29 +27,22 @@ public class Specialist extends Thread {
     @Override
     public void run() {
         super.run();
+        returnToTreatmentRoom();
         while (!isInterrupted()) {
-            try {
-                // Check if there is a patient in treatment
-                if (isAtTreatment) {
-                    if (null == treatment.getPatient()) {
-                        continue;
-                    }
-                    // Treat the patient
-                    synchronized (treatment.getPatient()) {
-                        treatPatient();
-                    }
-                    // Leave the treatment room
-                    leaveTreatmentRoom();
+            // Check if there is a patient in treatment
+            if (isAtTreatment()) {
+                if (null == treatment.getPatient()) {
+                    continue;
                 }
-                // Sleep for a specified period before returning to treatment
-                sleep(Params.SPECIALIST_AWAY_TIME);
-                // Return to the treatment room
-                returnToTreatmentRoom();
-            } catch (InterruptedException e) {
-                // Handle interrupted exception
-                Thread.currentThread().interrupt();
-                return;
+                // Treat the patient
+                synchronized (treatment.getPatient()) {
+                    treatPatient();
+                }
+                // Leave the treatment room
+                leaveTreatmentRoom();
             }
+            // Return to the treatment room
+            returnToTreatmentRoom();
         }
     }
 
@@ -59,17 +53,21 @@ public class Specialist extends Thread {
     private synchronized void treatPatient() {
         // Get the patient from the treatment room
         Patient patient = treatment.getPatient();
-        // Treat the patient (perform treatment operations)
-        // Assuming some treatment operations are performed here
-        // Log treatment completion
-        Logger.getInstance().log(patient, " treatment started.");
-        // Sleep for treatment time
-        try {
-            sleep(Params.TREATMENT_TIME);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        if (!patient.treated) {
+            // Treat the patient (perform treatment operations)
+            // Assuming some treatment operations are performed here
+            // Log treatment completion
+            Logger.getInstance().log(patient, " treatment started.");
+            // Sleep for treatment time
+            try {
+                sleep(Params.TREATMENT_TIME);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            patient.getTreated();
+            Logger.getInstance().log(patient, " treatment complete.");
+            treatment.getPatient().notify();
         }
-        Logger.getInstance().log(patient, " treatment complete.");
     }
 
     /**
@@ -77,6 +75,12 @@ public class Specialist extends Thread {
      */
     private synchronized void leaveTreatmentRoom() {
         Logger.getInstance().log("Specialist leaves treatment room.");
+        // Sleep for a specified period before returning to treatment
+        try {
+            sleep(Params.SPECIALIST_AWAY_TIME);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         isAtTreatment = false;
     }
 
@@ -86,5 +90,9 @@ public class Specialist extends Thread {
     private synchronized void returnToTreatmentRoom() {
         Logger.getInstance().log("Specialist enters treatment room.");
         isAtTreatment = true;
+    }
+
+    public boolean isAtTreatment() {
+        return isAtTreatment;
     }
 }

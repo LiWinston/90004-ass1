@@ -140,4 +140,8 @@ public class Patient {
         }
         return destination;
     }
+
+    public void getTreated() {
+        this.treated = true;
+    }
 }

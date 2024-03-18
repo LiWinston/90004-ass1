@@ -5,7 +5,16 @@
  * @author yongchunl@student.unimelb.edu.au
  */
 public class Treatment implements Movable {
-    private Patient patient;
+    public Specialist getSpecialist() {
+        return specialist;
+    }
+
+    public void setSpecialist(Specialist specialist) {
+        this.specialist = specialist;
+    }
+
+    private Specialist specialist;
+    private volatile Patient patient;
 
     /**
      * Gets the patient currently in the treatment room.
@@ -37,7 +46,7 @@ public class Treatment implements Movable {
             patient.setLocation(this);
             this.patient = patient;
             Logger.getInstance().log(patient, " enters treatment room.");
-            notifyAll();
+            notify();
         }
     }
 
@@ -48,8 +57,11 @@ public class Treatment implements Movable {
      */
     @Override
     public void leave(Patient patient) {
-        patient.setLocation(null);
-        this.patient = null;
-        Logger.getInstance().log(patient, " leaves treatment room.");
+        synchronized (this) {
+            patient.setLocation(null);
+            this.patient = null;
+            notify();
+            Logger.getInstance().log(patient, " leaves treatment room.");
+        }
     }
 }

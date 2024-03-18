@@ -80,21 +80,34 @@ public class Nurse extends Thread {
                     try {
                         //try moving the patient to the next destination
                         if (patient != null && patient.getLocation() != null) {
+                            while (patient.getLocation() == treatment && !treatment.getSpecialist().isAtTreatment()) {
+                                //If the patient is in the treatment room and the specialist is absent, then wait
+                                try {
+                                    wait();
+                                } catch (InterruptedException e) {
+                                    Thread.currentThread().interrupt();
+                                    return;
+                                }
+                            }
                             //Try to Employ the orderlies. TODO :Should here be synchronized or try{}catch{} again?
                             //Can‘t leave before assistance from orderlies is available
                             orderlies.recruitOrderlies(this, Params.TRANSFER_ORDERLIES);
 
                             //Refresh the destination before position change
-                            patient.loadDestination();
+                            Movable dst = patient.loadDestination();
                             //leave the current location prior to destination turning prepared is okay -- ED discussion
                             patient.getLocation().leave(patient);
 
-                            if (patient.loadDestination().isAccessible()) {
-                                //Logger.getInstance().log("Nurse " + nurseId + " is transferring Patient " + patient.getId() + " to " + patient.loadDestination().getClass().getSimpleName() + ".");
-                                //Apply the transfer time
-                                wait(Params.TRANSFER_TIME);
-                                patient.loadDestination().enter(patient);
-                                orderlies.releaseOrderlies(this);
+                            synchronized (dst) {
+                                if (dst.isAccessible()) {
+                                    //Logger.getInstance().log("Nurse " + nurseId + " is transferring Patient " + patient.getId() + " to " + patient.loadDestination().getClass().getSimpleName() + ".");
+                                    //Apply the transfer time
+
+                                    sleep(Params.TRANSFER_TIME);
+                                    patient.loadDestination().enter(patient);
+                                    orderlies.releaseOrderlies(this);
+                                }
+                                notify();
                             }
                         }
                     } catch (InterruptedException e) {
