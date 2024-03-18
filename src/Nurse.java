@@ -145,8 +145,7 @@ public class Nurse extends Thread {
             patient.setNurse(this);
             this.setPatient(patient);
             allocated = true;
-            String severe = patient.Severe() ? " (S)" : "";
-            Logger.getInstance().log("Nurse " + nurseId + " allocated to Patient " + patient.getId() + severe + ".");
+            Logger.getInstance().log(patient, " allocated to Nurse " + nurseId + ".");
 //            /*
 //            Testing purpose
 //             Only for continuous adding and removing patients inside the foyer
