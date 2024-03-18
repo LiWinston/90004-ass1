@@ -32,6 +32,7 @@ public class Specialist extends Thread {
             // Check if there is a patient in treatment
             if (isAtTreatment()) {
                 if (null == treatment.getPatient()) {
+                    leaveTreatmentRoom();
                     continue;
                 }
                 // Treat the patient
