@@ -25,13 +25,16 @@ public class Triage implements Movable {
      */
     @Override
     public synchronized void enter(Patient patient) {
-        this.patient = patient;
-        patient.setLocation(this);
-        Logger.getInstance().log(patient, " enters triage.");
-        try {
-            Thread.sleep(Params.TRIAGE_TIME);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        synchronized (this) {
+            this.patient = patient;
+            patient.setLocation(this);
+            Logger.getInstance().log(patient, " enters triage.");
+            try {
+                Thread.sleep(Params.TRIAGE_TIME);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            notifyAll();
         }
     }
 

@@ -82,11 +82,14 @@ public class Foyer implements Movable {
 
     @Override
     public synchronized void enter(Patient patient) {
-        if (departingPatient == null) {
-            departingPatient = patient;
-            patient.setLocation(this);
-            Logger.getInstance().log(patient, " enters Foyer.");
-            patient.getNurse().deallocatePatient(departingPatient);
+        synchronized (this) {
+            if (departingPatient == null) {
+                departingPatient = patient;
+                patient.setLocation(this);
+                Logger.getInstance().log(patient, " enters Foyer.");
+                patient.getNurse().deallocatePatient(departingPatient);
+            }
+            notifyAll();
         }
     }
 
