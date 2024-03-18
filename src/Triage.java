@@ -34,7 +34,7 @@ public class Triage implements Movable {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            notifyAll();
+            notify();
         }
     }
 
@@ -45,8 +45,11 @@ public class Triage implements Movable {
      */
     @Override
     public void leave(Patient patient) {
-        patient.setLocation(null);
-        this.patient = null;
-        Logger.getInstance().log(patient, " leaves triage.");
+        synchronized (this) {
+            patient.setLocation(null);
+            this.patient = null;
+            notify();
+            Logger.getInstance().log(patient, " leaves triage.");
+        }
     }
 }
