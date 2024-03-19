@@ -105,6 +105,7 @@ public class Patient {
             } else if (this.allocated && nurse == null) {
                 this.nurse = null;
                 this.allocated = false;
+                notify();
             } else {
                 throw new IllegalStateException("Patient " + this.id + " has already been allocated to a nurse.");
             }
