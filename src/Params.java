@@ -12,13 +12,13 @@ public class Params {
   public final static String LOG_FILE = "log.txt";
 
   //the number of nurses in the emergency department
-  public final static int NURSES = 8;
-  
+  public final static int NURSES = 3;
+
   //the number of orderlies in the emergency department
   public final static int ORDERLIES = 8;
-  
+
   //the number of orderlies required to transfer a patient
-  public final static int TRANSFER_ORDERLIES = 1;
+  public final static int TRANSFER_ORDERLIES = 3;
   
   //the proportion of patients whose condition is severe
   public final static double SEVERE_PROPORTION = 0.65;

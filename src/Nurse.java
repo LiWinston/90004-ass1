@@ -158,28 +158,11 @@ public class Nurse extends Thread {
     //TODO: question: What on earth should be locked?
     public void allocatePatient(Patient patient) {
         synchronized (patient) {
-//            patient.allocated = true;
             patient.setNurse(this);
             this.setPatient(patient);
             allocated = true;
             Logger.getInstance().log(patient, " allocated to Nurse " + nurseId + ".");
-//            /*
-//            Testing purpose
-//             Only for continuous adding and removing patients inside the foyer
-//             TODO: remove this part
-//             */
-//            foyer.leave(patient);
-//            try {
-//                sleep(2000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//            foyer.enter(patient);
-//            /*
-//            Testing purpose
-//             Only for continuous adding and removing patients inside the foyer
-//             TODO: remove this part
-//             */ //end
+
             notifyAll();
         }
     }

@@ -8,7 +8,7 @@
  */
 public class Specialist extends Thread {
     private final Treatment treatment;
-    private boolean isAtTreatment;
+    private volatile boolean isAtTreatment;
 
     /**
      * Constructs a specialist with the specified treatment room.
@@ -69,7 +69,7 @@ public class Specialist extends Thread {
             Logger.getInstance().log(patient, " treatment complete.");
             treatment.getPatient().notify();
             synchronized (patient.getNurse()) {
-                patient.getNurse().notify(); // 通知等待中的护士
+                patient.getNurse().notify();
             }
         }
     }

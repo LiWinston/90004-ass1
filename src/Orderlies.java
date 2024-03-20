@@ -76,15 +76,15 @@ public class Orderlies {
      * @param nurse the nurse releasing the orderlies
      */
     public void releaseOrderlies(Nurse nurse) {
-        synchronized (this) {
+//        synchronized (this) {
             if (recruitRecord.containsKey(nurse.getNurseId())) {
                 int numOrderlies = recruitRecord.get(nurse.getNurseId());
                 freeOrderlies += numOrderlies;
                 recruitRecord.remove(nurse.getNurseId());
                 Logger.getInstance().log("Nurse " + nurse.getNurseId() + " releases " + numOrderlies + " orderlies " +
                         "(" + freeOrderlies + " free).");
-                this.notifyAll();
+//                this.notifyAll();
             }
-        }
+//        }
     }
 }
