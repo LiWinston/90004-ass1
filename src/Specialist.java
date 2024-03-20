@@ -52,25 +52,28 @@ public class Specialist extends Thread {
      * This method simulates the specialist performing treatment operations on the patient.
      */
     private synchronized void treatPatient() {
-        // Get the patient from the treatment room
-        Patient patient = treatment.getPatient();
-        if (!patient.treated) {
-            // Treat the patient (perform treatment operations)
-            // Assuming some treatment operations are performed here
-            // Log treatment completion
-            Logger.getInstance().log(patient, " treatment started.");
-            // Sleep for treatment time
-            try {
-                sleep(Params.TREATMENT_TIME);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+        synchronized(treatment){
+            // Get the patient from the treatment room
+            Patient patient = treatment.getPatient();
+            if (!patient.treated) {
+                // Treat the patient (perform treatment operations)
+                // Assuming some treatment operations are performed here
+                // Log treatment completion
+                Logger.getInstance().log(patient, " treatment started.");
+                // Sleep for treatment time
+                try {
+                    sleep(Params.TREATMENT_TIME);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                patient.getTreated();
+                Logger.getInstance().log(patient, " treatment complete.");
+                treatment.getPatient().notify();
+                synchronized (patient.getNurse()) {
+                    patient.getNurse().notify(); // 通知等待中的护士
+                }
             }
-            patient.getTreated();
-            Logger.getInstance().log(patient, " treatment complete.");
-            treatment.getPatient().notify();
-            synchronized (patient.getNurse()) {
-                patient.getNurse().notify(); // 通知等待中的护士
-            }
+            notify();
         }
     }
 
