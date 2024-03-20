@@ -100,9 +100,7 @@ public class Nurse extends Thread {
 
                             synchronized (dst) {
                                 if (dst.isAccessible()) {
-                                    //Logger.getInstance().log("Nurse " + nurseId + " is transferring Patient " + patient.getId() + " to " + patient.loadDestination().getClass().getSimpleName() + ".");
                                     //Apply the transfer time
-
                                     sleep(Params.TRANSFER_TIME);
                                     patient.loadDestination().enter(patient);
                                     orderlies.releaseOrderlies(this);
