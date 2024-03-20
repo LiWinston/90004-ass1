@@ -1,10 +1,12 @@
-Reflection
-behaviours & potential problems：
-最终的效果是符合预期的——随着病人不断来到，护士会随机地分配给新来的病人；一旦分配，她们会从始至终地协助同一个病人导诊、治疗或出院，不同的线程在关键节点上竞争执行权——这使得事情都是随机的发生（当然，在合法的框架下），这包括护士争夺病人、病人在未定义廊道中争夺进入房间。同时，在条件不满足时，线程等待被通知。
-在参数合理的前提下，系统有条不紊，但一旦加快某些过程，例如，产生病人的速度快过ED诊疗流程时，患者编号会跳号；又如，缩减orderlies编制以至于与护士数量相对应的满编需求时，会有较大机会使得流程卡住，尤其是当orderlies被排队占据而治疗完毕的患者无人转运时，我们就只能看到专家不断进出诊室而其他人凝滞住了。
-而当orderlies足够，又通常最终陷入过多的组在等待、而仅剩下的一组orderlies负责不断转运新患者。
-key design decisions or problems：
-我的流程基本是由nurse驱动的，且房间的出入采取接口化，同时寻址委托给患者类，下一步要去哪里由患者类规定，这允许了拓展性，但使得Nurse类的run方法过于臃肿。
-在开发中我遇到若干次“一个锁不够”的问题，体现为，不但要锁方法，还要锁自身对象，比如解决房间重复进入违反容量限制的问题。最终enter（）方法都呈现为方法和对象的双重锁定，这并不优雅。
-insights：
-这些问题一方面是系统性的、机制性的，也即：人手的确不足，等待队列消耗完了勤务人员，后面的流程不能正确清空、前面的人就不能继续。另一方面，通过synchronized和wait-notify模式来管理共享资源的做法对心智开销甚大，一旦系统设计不够扁平，意料之外的死锁就有可能出现。
+Reflection:
+Behaviors & Potential Problems:
+The final outcome meets expectations - as patients arrive, nurses are randomly assigned to new arrivals. Once assigned, they assist the same patient throughout triage, treatment, or discharge, with different threads competing for execution rights at critical points. This randomness, within legal bounds, includes nurses vying for patients and patients competing to enter rooms in undefined corridors. Meanwhile, threads wait to be notified when conditions are not met. Under reasonable parameters, the system operates smoothly. However, accelerating certain processes, such as patient arrival rates exceeding ED treatment pace, can lead to patient number skipping. Similarly, reducing the number of orderlies to below nurses’ demand can significantly increase the chance of workflow stalling, especially when orderlies are occupied in queues and patients awaiting transport after treatment are left unattended, leading to observed stagnation except for the specialist constantly entering and exiting. With sufficient orderlies, it often results in too many groups waiting, with only one group responsible for continuous patient transfers.
+
+Key Design Decisions or Problems:
+My workflow is primarily driven by nurses, with room access interface-based and addressing delegated to patient classes, allowing for scalability but resulting in the Nurse class's run method becoming overly cumbersome. During development, I encountered several instances of "one lock not enough" issues, manifested as needing to lock methods and the object itself, such as resolving the problem of rooms being repeatedly entered in violation of capacity limits. Ultimately, the enter() method presents as a dual locking of method and object, which is not elegant.
+Another problem encountered was "Whom to be locked." My decision was that when two threads interact with each other, it's best for each thread to acquire the lock of the other, or at least acquire the lock of the party at risk of performing a series of non-atomic operations. When threads interact with resource objects, priority is given to locking the resource.
+Regarding variables, if unsure whether they are prone to stale caching, it's easier to declare them as volatile.
+As for the movement process between rooms, I decided to decouple departure from arrival. Departures occur when conditions are met, but arrival is contingent upon acquiring the lock of the destination. Otherwise, the thread waits. This approach provides a more realistic simulation of concurrency but increases the likelihood of queuing and waiting traps.
+
+Insights:
+These issues are both systemic and mechanistic, indicating a genuine shortage of manpower where the depletion of the waiting queue exhausts personnel, preventing subsequent processes from clearing correctly and causing preceding individuals to stall. Moreover, the approach of managing shared resources using synchronized and wait-notify patterns incurs significant mental overhead. If the system design is not sufficiently flat, unexpected deadlocks may occur. Locks can only guarantee the atomicity of the code block, but when the logic becomes complex, inevitably, new competitions arise within the block—nested situations occur. People must constantly simulate in their minds and decide: "When should I appropriately release the lock and notify?"
