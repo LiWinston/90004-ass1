@@ -12,7 +12,7 @@
  * <p>
  * Note: This class is not thread-safe and should be used in a controlled environment to avoid race conditions.
  *
- * @author yongchunl@student.unimelb.edu.au
+ * @author Yongchunli 1378156
  * @version 1.0
  * @since 2024-03-16
  */

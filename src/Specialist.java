@@ -2,7 +2,7 @@
  * Represents a specialist who performs treatment procedures on patients in a treatment room.
  * The specialist periodically treats patients and alternates between being in the treatment room and being away.
  *
- * @author yongchunl@student.unimelb.edu.au
+ * @author Yongchunli 1378156
  * @version 1.0
  * @since 2024-03-18
  */

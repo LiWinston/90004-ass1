@@ -39,7 +39,7 @@ import java.util.Enumeration;
  * Logger.getInstance().log("This is a log message.");
  * }</pre>
  *
- * @author yongchunl@student.unimelb.edu.au
+ * @author Yongchunli 1378156
  * @version 1.0
  * @since 18 Mar 2024
  */

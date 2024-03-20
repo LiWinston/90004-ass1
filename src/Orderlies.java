@@ -5,7 +5,7 @@ import java.util.Hashtable;
  * <p>
  * It ensures thread safety during the recruitment and release processes.
  * Orderlies are recruited by nurses to assist with patient transfers.
- * @author yongchunl@student.unimelb.edu.au
+ * @author Yongchunli 1378156
  * @version 1.0
  * @since 2024-03-16
  */

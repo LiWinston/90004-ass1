@@ -2,7 +2,7 @@
  * Represents a treatment room where patients receive specialized medical treatment.
  * Implements the Movable interface to manage patient movement within the emergency department.
  *
- * @author yongchunl@student.unimelb.edu.au
+ * @author Yongchunli 1378156
  */
 public class Treatment implements Movable {
     public Specialist getSpecialist() {

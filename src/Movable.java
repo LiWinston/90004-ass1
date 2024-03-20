@@ -7,7 +7,7 @@
  * Implementing classes should provide functionality to manage patient movement
  * within the hospital.
  *
- * @author yongchunl@student.unimelb.edu.au
+ * @author Yongchunli 1378156
  * @version 1.0
  * @since 2024-03-16
  */

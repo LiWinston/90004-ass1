@@ -4,7 +4,7 @@ import java.util.Objects;
  * Represents the foyer area in a medical facility.
  * Implements the Movable interface.
  *
- * @author yongchunl@student.unimelb.edu.au
+ * @author Yongchunli 1378156
  */
 public class Foyer implements Movable {
 

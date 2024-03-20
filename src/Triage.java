@@ -2,7 +2,7 @@
  * Represents a triage area where patients are initially assessed and prioritized for treatment.
  * Implements the Movable interface to manage patient movement within the emergency department.
  *
- * @author yongchunl@student.unimelb.edu.au
+ * @author Yongchunli 1378156
  */
 public class Triage implements Movable {
 

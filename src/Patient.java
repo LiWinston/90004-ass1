@@ -7,7 +7,7 @@ import java.util.Random;
  *
  * @author ngeard@unimelb.edu.au
  * &#064;date 13 February 2024
- * modified by: yongchunl@student.unimelb.edu.au
+ * modified by: Yongchunli 1378156
  */
 
 public class Patient {
