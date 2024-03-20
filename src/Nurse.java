@@ -79,25 +79,31 @@ public class Nurse extends Thread {
                 while (allocated && !isInterrupted()) {
                     try {
                         //try moving the patient to the next destination
-                        if (patient != null && patient.getLocation() != null) {
-                            while (patient.getLocation() == treatment && !patient.treated) {
-                                //If in the treatment and not yet treated, then wait
-                                try {
-                                    wait();
-                                } catch (InterruptedException e) {
-                                    Thread.currentThread().interrupt();
-                                    return;
+                        if (patient != null) {
+                            if (patient.getLocation() != null) {
+                                while (patient.getLocation() == treatment && !patient.treated) {
+                                    //If in the treatment and not yet treated, then wait
+                                    try {
+                                        wait();
+                                    } catch (InterruptedException e) {
+                                        Thread.currentThread().interrupt();
+                                        return;
+                                    }
                                 }
+                                //Try to Employ the orderlies. TODO :Should here be synchronized or try{}catch{} again?
+                                //Can‘t leave before assistance from orderlies is available
+                                orderlies.recruitOrderlies(this, Params.TRANSFER_ORDERLIES);
+
+                                //Refresh the destination before position change
+                                patient.loadDestination();
+                                //leave the current location prior to destination turning prepared is okay -- ED discussion
+                                patient.getLocation().leave(patient);
                             }
-                            //Try to Employ the orderlies. TODO :Should here be synchronized or try{}catch{} again?
-                            //Can‘t leave before assistance from orderlies is available
-                            orderlies.recruitOrderlies(this, Params.TRANSFER_ORDERLIES);
 
-                            //Refresh the destination before position change
                             Movable dst = patient.loadDestination();
-                            //leave the current location prior to destination turning prepared is okay -- ED discussion
-                            patient.getLocation().leave(patient);
-
+                            while(!dst.isAccessible()){
+                                wait();
+                            }
                             synchronized (dst) {
                                 if (dst.isAccessible()) {
                                     //Apply the transfer time
